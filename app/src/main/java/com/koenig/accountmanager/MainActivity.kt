@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -36,16 +37,43 @@ class MainActivity : AppCompatActivity() {
 
         // VALIDATION OF THE PW
         loginButton.setOnClickListener {
-            validatePassword(passwordInput.text.toString())
+            //validatePassword_Insecure(passwordInput.text.toString())
+            validatePassword_Secure(passwordInput.text.toString())
         }
     }
 
-    private fun validatePassword(enteredPassword: String)
+    private fun validatePassword_Insecure(enteredPassword: String)
     {
         val selection = "masterPassword = '${enteredPassword}'"
         val cursor = contentResolver.query(MASTER_CONTENT_URI, null, selection, null, null, null)
 
         if (cursor!!.count > 0)
+        {
+            // CORRECT PW WAS ENTERED
+            val intent = Intent(this, AccountDataActivity::class.java)
+            startActivity(intent)
+        }
+        else
+        {
+            // WRONG PW WAS ENTERED
+            Toast.makeText(this, "Wrong Password", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun validatePassword_Secure(enteredPassword: String)
+    {
+        val cursor = contentResolver.query(MASTER_CONTENT_URI, null, null, null, null, null)
+        var masterpw: String = ""
+
+        with(cursor)
+        {
+            while (this!!.moveToNext())
+            {
+                masterpw = getString(getColumnIndexOrThrow(DBContentProvider.masterPassword))
+            }
+        }
+
+        if (enteredPassword == masterpw)
         {
             // CORRECT PW WAS ENTERED
             val intent = Intent(this, AccountDataActivity::class.java)
