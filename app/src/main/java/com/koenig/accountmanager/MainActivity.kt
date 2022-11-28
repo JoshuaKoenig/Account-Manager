@@ -4,13 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import com.koenig.accountmanager.crypto.Encryption
 
+@RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : AppCompatActivity() {
 
     // THE MASTER TABLE URI
@@ -42,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun validatePassword_Insecure(enteredPassword: String)
     {
         val selection = "masterPassword = '${enteredPassword}'"
@@ -60,8 +64,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun validatePassword_Secure(enteredPassword: String)
     {
+        val encryption = Encryption()
+
         val cursor = contentResolver.query(MASTER_CONTENT_URI, null, null, null, null, null)
         var masterpw: String = ""
 
@@ -73,7 +80,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (enteredPassword == masterpw)
+        // DECRYPT THE MASTER PASSWORD
+        val decryptedMasterPassword = encryption.decryptKey("MASTER_PASSWORD", this)
+
+        if (enteredPassword == decryptedMasterPassword.toString())
         {
             // CORRECT PW WAS ENTERED
             val intent = Intent(this, AccountDataActivity::class.java)

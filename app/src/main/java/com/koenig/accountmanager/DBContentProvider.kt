@@ -25,7 +25,7 @@ class DBContentProvider: ContentProvider() {
         const val id = "id"
         const val accountName = "accountName"
         const val password = "password"
-        const val  TABLE_NAME = "Accounts"
+        const val TABLE_NAME = "Accounts"
 
         // MASTER TABLE DATA
         const val MASTER_TABLE_NAME = "Master"
@@ -33,7 +33,7 @@ class DBContentProvider: ContentProvider() {
 
         // DB DATA
         const val DATABASE_NAME = "AppData"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 5
         const val DbUriCode = 1
         const val MasterUriCode = 2
 

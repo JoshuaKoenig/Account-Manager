@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AccountManager.NoActionBar"
+        android:installLocation="internalOnly"
         tools:targetApi="31">
 
         <provider
